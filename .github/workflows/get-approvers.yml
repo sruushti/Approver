@@ -1,0 +1,24 @@
+name: Get Pull Request Reviewers
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  get-reviews:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get GitHub Pull Request Reviews
+        id: reviews
+        uses: sruushti/Approver@main  # Use the correct action version/tag from the repo
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Display Reviews
+        run: |
+          echo "Reviews file path: ${{ steps.reviews.outputs.reviews_file_path }}"
+          cat ${{ steps.reviews.outputs.reviews_file_path }} | jq '.'
